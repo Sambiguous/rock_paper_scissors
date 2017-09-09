@@ -1,4 +1,5 @@
 from random import randint
+import json
 
 
 class RockPaperScissors(object):
@@ -35,10 +36,13 @@ class RockPaperScissors(object):
         return record
 
     def get_record(self):
-        with open('save.txt', 'r') as save_file:
-            self.l_rec['wins'] = int(save_file.readline())
-            self.l_rec['losses'] = int(save_file.readline())
-            self.l_rec['ties'] = int(save_file.readline())
+        with open('save.txt', 'r+') as save_file:
+        	r = save_file.read()
+        	if r == "":
+        		self.l_rec={'wins': 0, 'losses': 0, 'ties': 0}
+        	else:
+        		self.l_rec = json.loads(r)
+       	print(self.l_rec)
         return None
 
     def save_record(self):
@@ -46,7 +50,7 @@ class RockPaperScissors(object):
         self.l_rec['losses'] += self.s_rec['losses']
         self.l_rec['ties'] += self.s_rec['ties']
         with open('save.txt', 'w') as save_file:
-            save_file.write('%s\n%s\n%s' % (self.l_rec['wins'], self.l_rec['losses'], self.l_rec['ties']))
+            save_file.write(json.dumps(self.l_rec))
 
     def throw(self, user):
         cpu = randint(0, 2)
